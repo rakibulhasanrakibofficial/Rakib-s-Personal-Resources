@@ -23,6 +23,33 @@ body{font-family:Arial;background:#0f172a;color:white;text-align:center}
 .card:hover{background:#334155}
 a{display:block;margin:6px;color:#38bdf8}
 button{margin:10px;padding:6px 12px}
+.file-card{
+  background:#1e293b;
+  margin:15px;
+  padding:15px;
+  border-radius:15px;
+  text-align:left;
+}
+
+.file-card h4{
+  margin:5px 0;
+}
+
+.file-card p{
+  font-size:12px;
+  color:#94a3b8;
+}
+
+.download-btn{
+  margin-top:10px;
+  width:100%;
+  padding:10px;
+  background:#2563eb;
+  color:white;
+  border:none;
+  border-radius:10px;
+  font-size:16px;
+}
 </style>
 </head>
 
@@ -330,8 +357,62 @@ function platform(name,type){
   `;
   show(html);
 }
+function openPrevious(){
+  let html=`
+  <h3>📂 Previous Questions</h3>
 
-</script>
+  <div class="file-card">
+    <h4>CHEM-2301 Mid</h4>
+    <p>CSE | Semester 3 | Mid</p>
+    <a href="CHEM-2301%20Mid%20Term%20Question.pdf" target="_blank">
+      <button class="download-btn">Download</button>
+    </a>
+  </div>
+
+  <div class="file-card">
+    <h4>CSE-2321 Mid</h4>
+    <p>CSE | Semester 3 | Mid</p>
+    <a href="CSE-2321%20Mid%20Term%20Question%20.pdf" target="_blank">
+      <button class="download-btn">Download</button>
+    </a>
+  </div>
+
+  <div class="file-card">
+    <h4>CSE-2323 Mid</h4>
+    <p>CSE | Semester 3 | Mid</p>
+    <a href="CSE-2323%20Mid%20Term%20Question.pdf" target="_blank">
+      <button class="download-btn">Download</button>
+    </a>
+  </div>
+
+  <div class="file-card">
+    <h4>GEED-2302 Mid</h4>
+    <p>CSE | Semester 3 | Mid</p>
+    <a href="GEED-2302%20Mid%20Term%20Question.pdf" target="_blank">
+      <button class="download-btn">Download</button>
+    </a>
+  </div>
+
+  <div class="file-card">
+    <h4>MATH-2307 Mid</h4>
+    <p>CSE | Semester 3 | Mid</p>
+    <a href="MATH-2307%20Mid%20Term%20Question.pdf" target="_blank">
+      <button class="download-btn">Download</button>
+    </a>
+  </div>
+
+  <div class="file-card">
+    <h4>STAT-2311 Mid</h4>
+    <p>CSE | Semester 3 | Mid</p>
+    <a href="STAT%202311%20Mid%20Term%20Question.pdf" target="_blank">
+      <button class="download-btn">Download</button>
+    </a>
+  </div>
+
+  <button onclick="openSem(${currentSem})">Back</button>
+  `;
+  show(html);
+}</script>
 
 </body>
 </html>
