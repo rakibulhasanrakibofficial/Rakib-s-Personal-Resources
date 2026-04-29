@@ -1,103 +1,309 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Rakib Resource Hub</title>
-  <style>
-    body {
-      font-family: Arial;
-      background: #0f172a;
-      color: white;
-      text-align: center;
-    }
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rakib Resource Hub</title>
 
-    h1 {
-      margin-top: 20px;
-    }
-
-    .container {
-      margin-top: 30px;
-    }
-
-    .card {
-      background: #1e293b;
-      padding: 20px;
-      margin: 10px;
-      border-radius: 12px;
-      cursor: pointer;
-    }
-
-    .card:hover {
-      background: #334155;
-    }
-
-    .hidden {
-      display: none;
-    }
-
-    a {
-      color: #38bdf8;
-      text-decoration: none;
-      display: block;
-      margin: 8px;
-    }
-  </style>
+<style>
+body{font-family:Arial;background:#0f172a;color:white;text-align:center}
+.card{background:#1e293b;margin:10px;padding:15px;border-radius:12px;cursor:pointer}
+.card:hover{background:#334155}
+.hidden{display:none}
+a{display:block;margin:6px;color:#38bdf8}
+button{margin:10px}
+</style>
 </head>
 
 <body>
 
-<h1>🚀 Rakib's Resource Hub</h1>
+<h2>🚀 Rakib Resource Hub</h2>
 
-<div id="main" class="container">
-  <div class="card" onclick="show('academic')">🎓 Academic</div>
-  <div class="card" onclick="show('paid')">💰 Paid Courses</div>
+<div id="main">
+  <div class="card" onclick="showAcademic()">🎓 Academic</div>
+  <div class="card" onclick="showFree()">🆓 Free Courses</div>
+  <div class="card" onclick="paid()">💰 Paid Courses</div>
 </div>
 
-<!-- Academic -->
-<div id="academic" class="container hidden">
-  <h2>📚 Academic</h2>
-  <div class="card" onclick="show('sem1')">Semester 1</div>
-  <div class="card" onclick="show('sem2')">Semester 2</div>
-  <div class="card" onclick="show('sem3')">Semester 3</div>
-
-  <button onclick="back()">⬅ Back</button>
-</div>
-
-<!-- Semester 1 -->
-<div id="sem1" class="container hidden">
-  <h2>Semester 1 Courses</h2>
-  <a href="#">Math</a>
-  <a href="#">Physics</a>
-  <button onclick="back()">⬅ Back</button>
-</div>
-
-<!-- Paid -->
-<div id="paid" class="container hidden">
-  <h2>💰 Paid Courses</h2>
-  <div class="card" onclick="show('hard')">Hard Skills</div>
-  <div class="card" onclick="show('soft')">Soft Skills</div>
-  <div class="card" onclick="show('ielts')">IELTS</div>
-
-  <button onclick="back()">⬅ Back</button>
-</div>
-
-<!-- Hard Skills -->
-<div id="hard" class="container hidden">
-  <h2>Hard Skills</h2>
-  <a href="#">Web Development</a>
-  <a href="#">Programming</a>
-  <button onclick="back()">⬅ Back</button>
-</div>
+<div id="screen" class="hidden"></div>
 
 <script>
-function show(id) {
-  document.querySelectorAll('.container').forEach(div => div.classList.add('hidden'));
-  document.getElementById(id).classList.remove('hidden');
+
+// ================= DATA =================
+const semesters = {
+
+1: [
+"CSE-1121 Computer Programming I",
+"CSE-1122 Programming I Lab",
+"EEE-1121 Basic Electrical Engineering",
+"EEE-1122 Electrical Lab",
+"MATH-1107 Mathematics I",
+"PHY-1101 Physics I",
+"UREL-1106 Advanced English",
+"UREM-1101 Ethics & Morality"
+],
+
+2: [
+"CSE-1221 Programming II",
+"CSE-1222 Programming II Lab",
+"CSE-1223 Discrete Mathematics",
+"CSE-1230 Competitive Programming",
+"EEE-1221 Electronics",
+"EEE-1222 Electronics Lab",
+"MATH-1207 Mathematics II",
+"PHY-1201 Physics II",
+"PHY-1204 Physics Lab",
+"URED-1201 Basic Islam"
+],
+
+3: [
+"CHEM-2301 Chemistry",
+"CSE-2321 Data Structures",
+"CSE-2322 DS Lab",
+"CSE-2323 Digital Logic Design",
+"CSE-2324 DLD Lab",
+"CSE-2340 Software Development I",
+"MATH-2307 Mathematics III",
+"STAT-2311 Probability",
+"URED-2302 Quran Hadith",
+],
+
+4: [
+"CSE-2421 Algorithms",
+"CSE-2422 Algorithms Lab",
+"CSE-2423 Database",
+"CSE-2424 DB Lab",
+"CSE-2425 Theory of Computing",
+"CSE-2430 Competitive Programming II",
+"EEE-2421 Electrical Drives",
+"EEE-2422 Electrical Lab",
+"GEBL-2401 Bangla",
+"MATH-2407 Mathematics IV",
+"ME-2412 Drawing Lab",
+"ACC-2401 Accounting"
+],
+
+5: [
+"CSE-3521 Computer Architecture",
+"CSE-3523 Microprocessor",
+"CSE-3524 Microprocessor Lab",
+"CSE-3525 Data Communication",
+"CSE-3527 Compiler",
+"CSE-3528 Compiler Lab",
+"CSE-3529 System Analysis",
+"CSE-3532 Internet Programming",
+"URED-3503 Political Thoughts"
+],
+
+6: [
+"CSE-3631 Operating System",
+"CSE-3632 OS Lab",
+"CSE-3633 Computer Network",
+"CSE-3634 Network Lab",
+"CSE-3635 Artificial Intelligence",
+"CSE-3636 AI Lab",
+"CSE-3637 Software Engineering",
+"CSE-3638 SE Lab",
+"CSE-3640 Software Dev II",
+"URED-3604 Prophet Life",
+"GEHE-3601 Bangladesh History"
+],
+
+7: [
+"CSE-4708 Field Work",
+"CSE-4741 Computer Graphics",
+"CSE-4742 CG Lab",
+"CSE-4743 Computer Security",
+"CSE-4744 Security Lab",
+"CSE-4745 Numerical Methods",
+"CSE-4746 NM Lab",
+"CSE-4747 Math Analysis",
+"CSE-4750 Technical Writing",
+"CSE-4800 Thesis",
+"ECON-3501 Economics",
+"URIH-4701 Islamic History"
+],
+
+8: [
+"CSE-4805 Ethics",
+"CSE-4819 Special Topic",
+"CSE-4820 Special Topic Lab",
+"CSE-4822 Viva",
+"CSE-4823 Fault Tolerant",
+"CSE-4824 Fault Lab",
+"CSE-4825 Graph Theory",
+"CSE-4826 Graph Lab",
+"CSE-4827 Simulation",
+"CSE-4828 Simulation Lab",
+"CSE-4839 Digital System",
+"CSE-4840 Digital Lab",
+"CSE-4843 Decision Support",
+"CSE-4844 Decision Lab",
+"CSE-4845 Distributed DB",
+"CSE-4846 Distributed Lab",
+"CSE-4847 Project Management",
+"CSE-4848 PM Lab",
+"CSE-4849 Software Quality",
+"CSE-4850 SQ Lab",
+"CSE-4851 Mobile Communication",
+"CSE-4852 Mobile Lab",
+"CSE-4853 Optical Fiber",
+"CSE-4854 Fiber Lab",
+"CSE-4857 VLSI",
+"CSE-4858 VLSI Lab",
+"CSE-4859 Embedded System",
+"CSE-4860 Embedded Lab",
+"CSE-4863 DSP",
+"CSE-4864 DSP Lab",
+"CSE-4867 NLP",
+"CSE-4868 NLP Lab",
+"CSE-4871 Neural Network",
+"CSE-4872 NN Lab",
+"CSE-4873 Computer Vision",
+"CSE-4874 CV Lab",
+"CSE-4877 Machine Learning",
+"CSE-4878 ML Lab"
+]
+
+};
+let currentSem=1;
+let currentType="mid";
+
+// ================= NAV =================
+function showScreen(html){
+  document.getElementById("main").style.display="none";
+  let s=document.getElementById("screen");
+  s.innerHTML=html;
+  s.classList.remove("hidden");
 }
 
-function back() {
-  document.querySelectorAll('.container').forEach(div => div.classList.add('hidden'));
-  document.getElementById('main').classList.remove('hidden');
+function home(){
+  document.getElementById("screen").classList.add("hidden");
+  document.getElementById("main").style.display="block";
 }
+
+// ================= ACADEMIC =================
+function showAcademic(){
+  let html="<h3>Semester</h3>";
+  for(let i=1;i<=8;i++){
+    html+=`<div class="card" onclick="openSem(${i})">Semester ${i}</div>`;
+  }
+  html+=`<button onclick="home()">Back</button>`;
+  showScreen(html);
+}
+
+function openSem(n){
+  currentSem=n;
+  let html=`
+  <h3>Semester ${n}</h3>
+  <div class="card" onclick="openExam('mid')">Mid</div>
+  <div class="card" onclick="openExam('final')">Final</div>
+  <div class="card" onclick="openOther()">Other</div>
+  <button onclick="showAcademic()">Back</button>
+  `;
+  showScreen(html);
+}
+
+function openExam(type){
+  currentType=type;
+  let html=`<h3>${type.toUpperCase()} - Semester ${currentSem}</h3>`;
+  semesters[currentSem].forEach(c=>{
+    html+=`<div class="card" onclick="openCourse('${c}')">${c}</div>`;
+  });
+  html+=`<button onclick="openSem(${currentSem})">Back</button>`;
+  showScreen(html);
+}
+
+function openCourse(name){
+  let html=`
+  <h3>${name}</h3>
+  <a href="#">Books</a>
+  <a href="#">Notes</a>
+  <a href="#">Slides</a>
+  <a href="#">Previous Solved</a>
+  <a href="#">Suggestion</a>
+  <a href="#">Classes</a>
+  <button onclick="openExam('${currentType}')">Back</button>
+  `;
+  showScreen(html);
+}
+
+function openOther(){
+  let html=`
+  <h3>Other</h3>
+  <a href="#">Routines</a>
+  <a href="#">Lab Reports</a>
+  <a href="#">Assignments</a>
+  <a href="#">Cover Pages</a>
+  <a href="#">Notice</a>
+  <a href="#">Viva Info</a>
+  <button onclick="openSem(${currentSem})">Back</button>
+  `;
+  showScreen(html);
+}
+
+// ================= FREE =================
+function showFree(){
+  let html=`
+  <h3>Free Courses</h3>
+  <div class="card">Hard Skills</div>
+  <div class="card">Soft Skills</div>
+  <div class="card">IELTS</div>
+  <button onclick="home()">Back</button>
+  `;
+  showScreen(html);
+}
+
+// ================= PAID =================
+function paid(){
+  let pass=prompt("Enter Password");
+  if(pass!=="rakib123"){alert("Wrong Password");return;}
+
+  let html=`
+  <h3>Paid Courses</h3>
+  <div class="card" onclick="hardSkills()">Hard Skills</div>
+  <div class="card" onclick="softSkills()">Soft Skills</div>
+  <div class="card">Abroad</div>
+  <button onclick="home()">Back</button>
+  `;
+  showScreen(html);
+}
+
+// HARD
+function hardSkills(){
+  let list=["Web Dev","App Dev","Data Science","AI/ML","Cyber Security","Cloud"];
+  let html="<h3>Hard Skills</h3>";
+  list.forEach(s=>{
+    html+=`<div class="card" onclick="platform('${s}')">${s}</div>`;
+  });
+  html+=`<button onclick="paid()">Back</button>`;
+  showScreen(html);
+}
+
+// SOFT
+function softSkills(){
+  let list=["Communication","Interview","CV","Leadership"];
+  let html="<h3>Soft Skills</h3>";
+  list.forEach(s=>{
+    html+=`<div class="card" onclick="platform('${s}')">${s}</div>`;
+  });
+  html+=`<button onclick="paid()">Back</button>`;
+  showScreen(html);
+}
+
+// PLATFORM
+function platform(name){
+  let html=`
+  <h3>${name}</h3>
+  <div class="card">Accounts</div>
+  <div class="card">Telegram Courses</div>
+  <div class="card">Ostad</div>
+  <div class="card">Interactive Cares</div>
+  <div class="card">10 Minute School</div>
+  <button onclick="paid()">Back</button>
+  `;
+  showScreen(html);
+}
+
 </script>
 
 </body>
