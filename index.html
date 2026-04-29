@@ -8,9 +8,8 @@
 body{font-family:Arial;background:#0f172a;color:white;text-align:center}
 .card{background:#1e293b;margin:10px;padding:15px;border-radius:12px;cursor:pointer}
 .card:hover{background:#334155}
-.hidden{display:none}
 a{display:block;margin:6px;color:#38bdf8}
-button{margin:10px}
+button{margin:10px;padding:6px 12px}
 </style>
 </head>
 
@@ -21,14 +20,15 @@ button{margin:10px}
 <div id="main">
   <div class="card" onclick="showAcademic()">🎓 Academic</div>
   <div class="card" onclick="showFree()">🆓 Free Courses</div>
-  <div class="card" onclick="paid()">💰 Paid Courses</div>
+  <div class="card" onclick="showPaid()">💰 Paid Courses</div>
 </div>
 
-<div id="screen" class="hidden"></div>
+<div id="screen"></div>
 
 <script>
+let paidUnlocked = false;
 
-// ================= DATA =================
+// ========= COURSE DATA =========
 const semesters = {
 
 1: [
@@ -168,27 +168,25 @@ const semesters = {
 let currentSem=1;
 let currentType="mid";
 
-// ================= NAV =================
-function showScreen(html){
+// ========= NAV =========
+function show(html){
   document.getElementById("main").style.display="none";
-  let s=document.getElementById("screen");
-  s.innerHTML=html;
-  s.classList.remove("hidden");
+  document.getElementById("screen").innerHTML=html;
 }
 
 function home(){
-  document.getElementById("screen").classList.add("hidden");
+  paidUnlocked = false; // 👈 এই লাইন add
   document.getElementById("main").style.display="block";
+  document.getElementById("screen").innerHTML="";
 }
-
-// ================= ACADEMIC =================
+// ========= ACADEMIC =========
 function showAcademic(){
   let html="<h3>Semester</h3>";
   for(let i=1;i<=8;i++){
     html+=`<div class="card" onclick="openSem(${i})">Semester ${i}</div>`;
   }
   html+=`<button onclick="home()">Back</button>`;
-  showScreen(html);
+  show(html);
 }
 
 function openSem(n){
@@ -200,7 +198,7 @@ function openSem(n){
   <div class="card" onclick="openOther()">Other</div>
   <button onclick="showAcademic()">Back</button>
   `;
-  showScreen(html);
+  show(html);
 }
 
 function openExam(type){
@@ -210,7 +208,7 @@ function openExam(type){
     html+=`<div class="card" onclick="openCourse('${c}')">${c}</div>`;
   });
   html+=`<button onclick="openSem(${currentSem})">Back</button>`;
-  showScreen(html);
+  show(html);
 }
 
 function openCourse(name){
@@ -224,7 +222,7 @@ function openCourse(name){
   <a href="#">Classes</a>
   <button onclick="openExam('${currentType}')">Back</button>
   `;
-  showScreen(html);
+  show(html);
 }
 
 function openOther(){
@@ -234,14 +232,12 @@ function openOther(){
   <a href="#">Lab Reports</a>
   <a href="#">Assignments</a>
   <a href="#">Cover Pages</a>
-  <a href="#">Notice</a>
-  <a href="#">Viva Info</a>
   <button onclick="openSem(${currentSem})">Back</button>
   `;
-  showScreen(html);
+  show(html);
 }
 
-// ================= FREE =================
+// ========= FREE =========
 function showFree(){
   let html=`
   <h3>Free Courses</h3>
@@ -250,13 +246,20 @@ function showFree(){
   <div class="card">IELTS</div>
   <button onclick="home()">Back</button>
   `;
-  showScreen(html);
+  show(html);
 }
 
-// ================= PAID =================
-function paid(){
-  let pass=prompt("Enter Password");
-  if(pass!=="rakib123"){alert("Wrong Password");return;}
+// ========= PAID =========
+function showPaid(){
+
+  if(!paidUnlocked){
+    let pass = prompt("Enter Password");
+    if(pass !== "rakib123"){
+      alert("Wrong Password");
+      return;
+    }
+    paidUnlocked = true;
+  }
 
   let html=`
   <h3>Paid Courses</h3>
@@ -265,43 +268,52 @@ function paid(){
   <div class="card">Abroad</div>
   <button onclick="home()">Back</button>
   `;
-  showScreen(html);
+  show(html);
 }
 
-// HARD
+// ========= HARD =========
 function hardSkills(){
-  let list=["Web Dev","App Dev","Data Science","AI/ML","Cyber Security","Cloud"];
+  let list=["Web Dev","App Dev","Data Science","AI/ML","Cyber Security"];
   let html="<h3>Hard Skills</h3>";
   list.forEach(s=>{
-    html+=`<div class="card" onclick="platform('${s}')">${s}</div>`;
+    html+=`<div class="card" onclick="openSource('${s}')">${s}</div>`;
   });
-  html+=`<button onclick="paid()">Back</button>`;
-  showScreen(html);
+  html+=`<button onclick="showPaid()">Back</button>`;
+  show(html);
 }
 
-// SOFT
+// ========= SOFT =========
 function softSkills(){
   let list=["Communication","Interview","CV","Leadership"];
   let html="<h3>Soft Skills</h3>";
   list.forEach(s=>{
-    html+=`<div class="card" onclick="platform('${s}')">${s}</div>`;
+    html+=`<div class="card" onclick="openSource('${s}')">${s}</div>`;
   });
-  html+=`<button onclick="paid()">Back</button>`;
-  showScreen(html);
+  html+=`<button onclick="showPaid()">Back</button>`;
+  show(html);
 }
 
-// PLATFORM
-function platform(name){
+// ========= SOURCE (Accounts / Telegram) =========
+function openSource(name){
   let html=`
   <h3>${name}</h3>
-  <div class="card">Accounts</div>
-  <div class="card">Telegram Courses</div>
+  <div class="card" onclick="platform('${name}','Accounts')">Accounts</div>
+  <div class="card" onclick="platform('${name}','Telegram')">Telegram Courses</div>
+  <button onclick="showPaid()">Back</button>
+  `;
+  show(html);
+}
+
+// ========= PLATFORM =========
+function platform(name,type){
+  let html=`
+  <h3>${name} (${type})</h3>
   <div class="card">Ostad</div>
   <div class="card">Interactive Cares</div>
   <div class="card">10 Minute School</div>
-  <button onclick="paid()">Back</button>
+  <button onclick="showPaid()">Back</button>
   `;
-  showScreen(html);
+  show(html);
 }
 
 </script>
