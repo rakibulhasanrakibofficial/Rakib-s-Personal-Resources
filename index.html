@@ -2,18 +2,103 @@
 <html>
 <head>
   <title>Rakib Resource Hub</title>
+  <style>
+    body {
+      font-family: Arial;
+      background: #0f172a;
+      color: white;
+      text-align: center;
+    }
+
+    h1 {
+      margin-top: 20px;
+    }
+
+    .container {
+      margin-top: 30px;
+    }
+
+    .card {
+      background: #1e293b;
+      padding: 20px;
+      margin: 10px;
+      border-radius: 12px;
+      cursor: pointer;
+    }
+
+    .card:hover {
+      background: #334155;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    a {
+      color: #38bdf8;
+      text-decoration: none;
+      display: block;
+      margin: 8px;
+    }
+  </style>
 </head>
+
 <body>
-  <h1>🚀 Rakib's Resource Hub</h1>
 
-  <h3>📚 Courses</h3>
-  <a href="https://youtube.com">YouTube Courses</a><br><br>
+<h1>🚀 Rakib's Resource Hub</h1>
 
-  <h3>📄 PDF</h3>
-  <a href="#">My Notes</a><br><br>
+<div id="main" class="container">
+  <div class="card" onclick="show('academic')">🎓 Academic</div>
+  <div class="card" onclick="show('paid')">💰 Paid Courses</div>
+</div>
 
-  <h3>🛠 Tools</h3>
-  <a href="#">Useful Tools</a>
+<!-- Academic -->
+<div id="academic" class="container hidden">
+  <h2>📚 Academic</h2>
+  <div class="card" onclick="show('sem1')">Semester 1</div>
+  <div class="card" onclick="show('sem2')">Semester 2</div>
+  <div class="card" onclick="show('sem3')">Semester 3</div>
+
+  <button onclick="back()">⬅ Back</button>
+</div>
+
+<!-- Semester 1 -->
+<div id="sem1" class="container hidden">
+  <h2>Semester 1 Courses</h2>
+  <a href="#">Math</a>
+  <a href="#">Physics</a>
+  <button onclick="back()">⬅ Back</button>
+</div>
+
+<!-- Paid -->
+<div id="paid" class="container hidden">
+  <h2>💰 Paid Courses</h2>
+  <div class="card" onclick="show('hard')">Hard Skills</div>
+  <div class="card" onclick="show('soft')">Soft Skills</div>
+  <div class="card" onclick="show('ielts')">IELTS</div>
+
+  <button onclick="back()">⬅ Back</button>
+</div>
+
+<!-- Hard Skills -->
+<div id="hard" class="container hidden">
+  <h2>Hard Skills</h2>
+  <a href="#">Web Development</a>
+  <a href="#">Programming</a>
+  <button onclick="back()">⬅ Back</button>
+</div>
+
+<script>
+function show(id) {
+  document.querySelectorAll('.container').forEach(div => div.classList.add('hidden'));
+  document.getElementById(id).classList.remove('hidden');
+}
+
+function back() {
+  document.querySelectorAll('.container').forEach(div => div.classList.add('hidden'));
+  document.getElementById('main').classList.remove('hidden');
+}
+</script>
 
 </body>
 </html>
