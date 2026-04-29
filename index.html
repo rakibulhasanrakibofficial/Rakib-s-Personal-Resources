@@ -214,12 +214,12 @@ function openExam(type){
 function openCourse(name){
   let html=`
   <h3>${name}</h3>
-  <a href="#">Books</a>
-  <a href="#">Notes</a>
-  <a href="#">Slides</a>
-  <a href="#">Previous Solved</a>
-  <a href="#">Suggestion</a>
-  <a href="#">Classes</a>
+  <button class="card">📚 Books</button>
+<button class="card">📝 Notes</button>
+<button class="card">🎞 Slides</button>
+<button class="card">📂 Previous Solved</button>
+<button class="card">💡 Suggestion</button>
+<button class="card">🎥 Classes</button>
   <button onclick="openExam('${currentType}')">Back</button>
   `;
   show(html);
