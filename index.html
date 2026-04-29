@@ -206,14 +206,16 @@ function openSem(n){
   currentSem=n;
   let html=`
   <h3>Semester ${n}</h3>
+
   <div class="card" onclick="openExam('mid')">Mid</div>
   <div class="card" onclick="openExam('final')">Final</div>
+  <div class="card" onclick="openPrevious()">Previous Question</div>
   <div class="card" onclick="openOther()">Other</div>
+
   <button onclick="showAcademic()">Back</button>
   `;
   show(html);
 }
-
 function openExam(type){
   currentType=type;
   let html=`<h3>${type.toUpperCase()} - Semester ${currentSem}</h3>`;
