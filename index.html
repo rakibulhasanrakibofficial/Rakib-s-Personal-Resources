@@ -236,7 +236,6 @@ function openSem(n){
 
   <div class="card" onclick="openExam('mid')">Mid</div>
   <div class="card" onclick="openExam('final')">Final</div>
-  <div class="card" onclick="openPrevious()">Previous Question</div>
   <div class="card" onclick="openOther()">Other</div>
 
   <button onclick="showAcademic()">Back</button>
@@ -382,6 +381,9 @@ function openCourse(name){
   `;
 
   show(html);
+}
+function download(key){
+  window.open(`https://t.me/Rakibspersonalresourcesbot?start=${key}`,'_blank');
 }
 </script>
 
