@@ -357,30 +357,33 @@ function platform(name,type){
   `;
   show(html);
 }
-function openPrevious(){
-  let html = `<h3>📂 Semester ${currentSem} - Previous Questions</h3>`;
+function openCourse(name){
 
-  semesters[currentSem].forEach(course => {
+  let subject = name.split(" ")[0].toLowerCase();
 
-    // subject code বের করা (first part)
-    let subject = course.split(" ")[0].toLowerCase();
+  let html=`
+  <h3>${name}</h3>
 
-    let key = `sem${currentSem}_prev_${subject}`;
+  <div class="card"
+  onclick="download('sem${currentSem}_${currentType}_${subject}')">
+  📄 Question
+  </div>
 
-    html += `
-    <div class="file-card">
-      <h4>${course}</h4>
-      <button class="download-btn"
-      onclick="window.open('https://t.me/Rakibspersonalresourcesbot?start=${key}','_blank')">
-      📥 Download
-      </button>
-    </div>
-    `;
-  });
+  <div class="card"
+  onclick="download('sem${currentSem}_${currentType}_prev_${subject}')">
+  📂 Previous Question
+  </div>
 
-  html += `<button onclick="openSem(${currentSem})">⬅ Back</button>`;
+  <div class="card">📚 Books</div>
+  <div class="card">📝 Notes</div>
+  <div class="card">🎞 Slides</div>
+
+  <button onclick="openExam('${currentType}')">Back</button>
+  `;
+
   show(html);
-}</script>
+}
+</script>
 
 </body>
 </html>
