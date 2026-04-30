@@ -75,18 +75,19 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def upload(update: Update, context: ContextTypes.DEFAULT_TYPE):
     try:
         sem = context.args[0]
-        category = context.args[1]
+        type_ = context.args[1]
+        cat = context.args[2]
 
-       UPLOAD_CONTEXT[update.effective_user.id] = {
-    "sem": sem,
-    "type": exam_type,
-    "cat": category
-}
+        UPLOAD_CONTEXT[update.effective_user.id] = {
+            "sem": sem,
+            "type": type_,
+            "cat": cat
+        }
 
         await update.message.reply_text("📤 Now send your PDF")
 
     except:
-        await update.message.reply_text("Use like: /upload 3 prev")
+        await update.message.reply_text("Use like: /upload 3 final prev")
 
 
 # 🔥 FILE HANDLE
