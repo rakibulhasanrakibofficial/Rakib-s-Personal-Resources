@@ -77,10 +77,11 @@ async def upload(update: Update, context: ContextTypes.DEFAULT_TYPE):
         sem = context.args[0]
         category = context.args[1]
 
-        UPLOAD_CONTEXT[update.effective_user.id] = {
-            "sem": sem,
-            "cat": category
-        }
+       UPLOAD_CONTEXT[update.effective_user.id] = {
+    "sem": sem,
+    "type": exam_type,
+    "cat": category
+}
 
         await update.message.reply_text("📤 Now send your PDF")
 
@@ -104,10 +105,11 @@ async def handle_file(update: Update, context: ContextTypes.DEFAULT_TYPE):
     # subject extract
     subject = file_name.split(" ")[0]
 
-    sem = UPLOAD_CONTEXT[user_id]["sem"]
-    cat = UPLOAD_CONTEXT[user_id]["cat"]
+   sem = UPLOAD_CONTEXT[user_id]["sem"]
+type_ = UPLOAD_CONTEXT[user_id]["type"]
+cat = UPLOAD_CONTEXT[user_id]["cat"]
 
-    key = f"sem{sem}_{cat}_{subject}"
+key = f"sem{sem}_{type_}_{cat}_{subject}"
 
     FILES[key] = file_id
     save_file(key, file_id)
