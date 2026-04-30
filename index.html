@@ -358,29 +358,39 @@ function platform(name,type){
   show(html);
 }
 function openPrevious(){
-  let html = `<h3>📂 Semester ${currentSem} - Previous Questions</h3>`;
 
-  semesters[currentSem].forEach(course => {
+  fetch("https://rakib-s-personal-resources.onrender.com/files")
+  .then(res => res.json())
+  .then(data => {
 
-    // subject code বের করা (first part)
-    let subject = course.split(" ")[0].toLowerCase();
+    let html = `<h3>📂 Semester ${currentSem} - Previous Questions</h3>`;
 
-    let key = `sem${currentSem}_prev_${subject}`;
+    Object.keys(data).forEach(key => {
 
-    html += `
-    <div class="file-card">
-      <h4>${course}</h4>
-      <button class="download-btn"
-      onclick="window.open('https://t.me/Rakibspersonalresourcesbot?start=${key}','_blank')">
-      📥 Download
-      </button>
-    </div>
-    `;
+      if(key.startsWith(`sem${currentSem}_`) && key.includes("prev")){
+
+        let subject = key.split("_").slice(3).join("_");
+
+        html += `
+        <div class="file-card">
+          <h4>${subject.toUpperCase()}</h4>
+          <button class="download-btn"
+          onclick="window.open('https://t.me/Rakibspersonalresourcesbot?start=${key}','_blank')">
+          📥 Download
+          </button>
+        </div>
+        `;
+      }
+
+    });
+
+    html += `<button onclick="openSem(${currentSem})">⬅ Back</button>`;
+    show(html);
+
   });
 
-  html += `<button onclick="openSem(${currentSem})">⬅ Back</button>`;
-  show(html);
-}</script>
+}
+</script>
 
 </body>
 </html>
