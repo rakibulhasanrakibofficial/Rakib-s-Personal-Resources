@@ -7,18 +7,27 @@ from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, Con
 
 TOKEN = "8625107557:AAFJRaDmLgtjaoVtbSLF5u_NIBRo87gyUdY"
 
-DB_FILE = "files.json"
+MONGO_URL = os.environ.get("MONGO_URL")
 
-# load / save
+client = MongoClient(MONGO_URL)
+db = client["telegram_bot"]
+collection = db["files"]
+
 def load_files():
-    if os.path.exists(DB_FILE):
-        with open(DB_FILE, "r") as f:
-            return json.load(f)
-    return {}
+    data = {}
+    for item in collection.find():
+        data[item["key"]] = item["file_id"]
+    return data
 
-def save_files(data):
-    with open(DB_FILE, "w") as f:
-        json.dump(data, f, indent=4)
+def save_file(key, file_id):
+    collection.update_one(
+        {"key": key},
+        {"$set": {"file_id": file_id}},
+        upsert=True
+    )
+
+def delete_file_db(key):
+    collection.delete_one({"key": key})
 
 FILES = load_files()
 # ===== API SERVER =====
@@ -100,7 +109,7 @@ async def handle_file(update: Update, context: ContextTypes.DEFAULT_TYPE):
     key = f"sem{sem}_{cat}_{subject}"
 
     FILES[key] = file_id
-    save_files(FILES)
+    save_file(key, file_id)
 
     
     await update.message.reply_text(f"✅ Saved!\nKEY: {key}")
@@ -110,8 +119,8 @@ async def delete_file(update: Update, context: ContextTypes.DEFAULT_TYPE):
         key = context.args[0]
 
         if key in FILES:
-            del FILES[key]
-            save_files(FILES)
+           del FILES[key]
+           delete_file_db(key)
             await update.message.reply_text(f"🗑 Deleted: {key}")
         else:
             await update.message.reply_text("❌ Key not found")
@@ -148,6 +157,3 @@ app.add_handler(CommandHandler("delete", delete_file))
 app.add_handler(CommandHandler("all", send_all))
 
 app.run_polling()
-app.run_polling()
-
-# update trigger
