@@ -148,3 +148,6 @@ app.add_handler(CommandHandler("delete", delete_file))
 app.add_handler(CommandHandler("all", send_all))
 
 app.run_polling()
+app.run_polling()
+
+# update trigger
