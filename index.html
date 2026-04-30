@@ -365,24 +365,28 @@ function openPrevious(){
 
     let html = `<h3>📂 Semester ${currentSem} - Previous Questions</h3>`;
 
-    Object.keys(data).forEach(key => {
+   Object.keys(data).forEach(key => {
 
-      if(key.startsWith(`sem${currentSem}_`) && key.includes("prev")){
+  const parts = key.split("_");
 
-        let subject = key.split("_").slice(3).join("_");
+  if(parts[0] === `sem${currentSem}` && parts[2] === "prev"){
 
-        html += `
-        <div class="file-card">
-          <h4>${subject.toUpperCase()}</h4>
-          <button class="download-btn"
-          onclick="window.open('https://t.me/Rakibspersonalresourcesbot?start=${key}','_blank')">
-          📥 Download
-          </button>
-        </div>
-        `;
-      }
+    let subject = parts.slice(3).join("_");
+    let examType = parts[1]; // mid / final
 
-    });
+    html += `
+    <div class="file-card">
+      <h4>${subject.toUpperCase()}</h4>
+      <p>📌 ${examType.toUpperCase()}</p>
+      <button class="download-btn"
+      onclick="window.open('https://t.me/Rakibspersonalresourcesbot?start=${key}','_blank')">
+      📥 Download
+      </button>
+    </div>
+    `;
+  }
+
+});
 
     html += `<button onclick="openSem(${currentSem})">⬅ Back</button>`;
     show(html);
