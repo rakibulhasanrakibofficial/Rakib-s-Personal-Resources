@@ -1,47 +1,386 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Rakib Resource Hub</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rakib Resource Hub</title>
+
+<style>
+body{font-family:Arial;background:#0f172a;color:white;text-align:center}
+.card{
+  background:#1e293b;
+  color:white;
+  padding:12px 18px;
+  margin:10px;
+  border-radius:12px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  min-width:130px;
+  white-space:nowrap;
+  cursor:pointer;
+}
+.card:hover{background:#334155}
+a{display:block;margin:6px;color:#38bdf8}
+button{margin:10px;padding:6px 12px}
+.file-card{
+  background:#1e293b;
+  margin:15px;
+  padding:15px;
+  border-radius:15px;
+  text-align:left;
+}
+
+.file-card h4{
+  margin:5px 0;
+}
+
+.file-card p{
+  font-size:12px;
+  color:#94a3b8;
+}
+
+.download-btn{
+  margin-top:10px;
+  width:100%;
+  padding:10px;
+  background:#2563eb;
+  color:white;
+  border:none;
+  border-radius:10px;
+  font-size:16px;
+}
+</style>
 </head>
-<body style="background:#0b132b; color:white; text-align:center; font-family:sans-serif;">
 
-<h1>🚀 Rakib Resource Hub</h1>
+<body>
 
-<h2>Semester 3</h2>
+<h2>🚀 Rakib Resource Hub</h2>
 
-<button onclick="loadData()">📂 Load Files</button>
+<div id="main">
+  <div class="card" onclick="showAcademic()">🎓 Academic</div>
+  <div class="card" onclick="showFree()">🆓 Free Courses</div>
+  <div class="card" onclick="showPaid()">💰 Paid Courses</div>
+</div>
 
-<div id="output"></div>
+<div id="screen"></div>
 
 <script>
-function loadData(){
-  fetch("https://rakib-s-personal-resources.onrender.com/files")
-  .then(res => res.json())
-  .then(data => {
+let paidUnlocked = false;
 
-    let html = "";
+// ========= COURSE DATA =========
+const semesters = {
 
-    Object.keys(data).forEach(key => {
+1: [
+"CSE-1121 Computer Programming I",
+"CSE-1122 Programming I Lab",
+"EEE-1121 Basic Electrical Engineering",
+"EEE-1122 Electrical Lab",
+"MATH-1107 Mathematics I",
+"PHY-1101 Physics I",
+"UREL-1106 Advanced English",
+"UREM-1101 Ethics & Morality"
+],
 
-      if(key.includes("sem3")){
+2: [
+"CSE-1221 Programming II",
+"CSE-1222 Programming II Lab",
+"CSE-1223 Discrete Mathematics",
+"CSE-1230 Competitive Programming",
+"EEE-1221 Electronics",
+"EEE-1222 Electronics Lab",
+"MATH-1207 Mathematics II",
+"PHY-1201 Physics II",
+"PHY-1204 Physics Lab",
+"URED-1201 Basic Islam"
+],
 
-        html += `
-        <div style="margin:10px; padding:10px; border:1px solid white;">
-          <p>${key}</p>
-          <a href="https://t.me/Rakibspersonalresourcesbot?start=${key}" target="_blank">
-            Download
-          </a>
-        </div>
-        `;
-      }
+3: [
+"CHEM-2301 Chemistry",
+"CSE-2321 Data Structures",
+"CSE-2322 DS Lab",
+"CSE-2323 Digital Logic Design",
+"CSE-2324 DLD Lab",
+"CSE-2340 Software Development I",
+"MATH-2307 Mathematics III",
+"STAT-2311 Probability",
+"URED-2302 Quran Hadith",
+],
 
-    });
+4: [
+"CSE-2421 Algorithms",
+"CSE-2422 Algorithms Lab",
+"CSE-2423 Database",
+"CSE-2424 DB Lab",
+"CSE-2425 Theory of Computing",
+"CSE-2430 Competitive Programming II",
+"EEE-2421 Electrical Drives",
+"EEE-2422 Electrical Lab",
+"GEBL-2401 Bangla",
+"MATH-2407 Mathematics IV",
+"ME-2412 Drawing Lab",
+"ACC-2401 Accounting"
+],
 
-    document.getElementById("output").innerHTML = html;
+5: [
+"CSE-3521 Computer Architecture",
+"CSE-3523 Microprocessor",
+"CSE-3524 Microprocessor Lab",
+"CSE-3525 Data Communication",
+"CSE-3527 Compiler",
+"CSE-3528 Compiler Lab",
+"CSE-3529 System Analysis",
+"CSE-3532 Internet Programming",
+"URED-3503 Political Thoughts"
+],
 
-  });
+6: [
+"CSE-3631 Operating System",
+"CSE-3632 OS Lab",
+"CSE-3633 Computer Network",
+"CSE-3634 Network Lab",
+"CSE-3635 Artificial Intelligence",
+"CSE-3636 AI Lab",
+"CSE-3637 Software Engineering",
+"CSE-3638 SE Lab",
+"CSE-3640 Software Dev II",
+"URED-3604 Prophet Life",
+"GEHE-3601 Bangladesh History"
+],
+
+7: [
+"CSE-4708 Field Work",
+"CSE-4741 Computer Graphics",
+"CSE-4742 CG Lab",
+"CSE-4743 Computer Security",
+"CSE-4744 Security Lab",
+"CSE-4745 Numerical Methods",
+"CSE-4746 NM Lab",
+"CSE-4747 Math Analysis",
+"CSE-4750 Technical Writing",
+"CSE-4800 Thesis",
+"ECON-3501 Economics",
+"URIH-4701 Islamic History"
+],
+
+8: [
+"CSE-4805 Ethics",
+"CSE-4819 Special Topic",
+"CSE-4820 Special Topic Lab",
+"CSE-4822 Viva",
+"CSE-4823 Fault Tolerant",
+"CSE-4824 Fault Lab",
+"CSE-4825 Graph Theory",
+"CSE-4826 Graph Lab",
+"CSE-4827 Simulation",
+"CSE-4828 Simulation Lab",
+"CSE-4839 Digital System",
+"CSE-4840 Digital Lab",
+"CSE-4843 Decision Support",
+"CSE-4844 Decision Lab",
+"CSE-4845 Distributed DB",
+"CSE-4846 Distributed Lab",
+"CSE-4847 Project Management",
+"CSE-4848 PM Lab",
+"CSE-4849 Software Quality",
+"CSE-4850 SQ Lab",
+"CSE-4851 Mobile Communication",
+"CSE-4852 Mobile Lab",
+"CSE-4853 Optical Fiber",
+"CSE-4854 Fiber Lab",
+"CSE-4857 VLSI",
+"CSE-4858 VLSI Lab",
+"CSE-4859 Embedded System",
+"CSE-4860 Embedded Lab",
+"CSE-4863 DSP",
+"CSE-4864 DSP Lab",
+"CSE-4867 NLP",
+"CSE-4868 NLP Lab",
+"CSE-4871 Neural Network",
+"CSE-4872 NN Lab",
+"CSE-4873 Computer Vision",
+"CSE-4874 CV Lab",
+"CSE-4877 Machine Learning",
+"CSE-4878 ML Lab"
+]
+
+};
+let currentSem=1;
+let currentType="mid";
+
+// ========= NAV =========
+function show(html){
+  document.getElementById("main").style.display="none";
+  document.getElementById("screen").innerHTML=html;
 }
-</script>
+
+function home(){
+  paidUnlocked = false; // 👈 এই লাইন add
+  document.getElementById("main").style.display="block";
+  document.getElementById("screen").innerHTML="";
+}
+// ========= ACADEMIC =========
+function showAcademic(){
+  let html="<h3>Semester</h3>";
+  for(let i=1;i<=8;i++){
+    html+=`<div class="card" onclick="openSem(${i})">Semester ${i}</div>`;
+  }
+  html+=`<button onclick="home()">Back</button>`;
+  show(html);
+}
+
+function openSem(n){
+  currentSem=n;
+  let html=`
+  <h3>Semester ${n}</h3>
+
+  <div class="card" onclick="openExam('mid')">Mid</div>
+  <div class="card" onclick="openExam('final')">Final</div>
+  <div class="card" onclick="openPrevious()">Previous Question</div>
+  <div class="card" onclick="openOther()">Other</div>
+
+  <button onclick="showAcademic()">Back</button>
+  `;
+  show(html);
+}
+function openExam(type){
+  currentType=type;
+  let html=`<h3>${type.toUpperCase()} - Semester ${currentSem}</h3>`;
+  semesters[currentSem].forEach(c=>{
+    html+=`<div class="card" onclick="openCourse('${c}')">${c}</div>`;
+  });
+  html+=`<button onclick="openSem(${currentSem})">Back</button>`;
+  show(html);
+}
+
+function openCourse(name){
+  let html=`
+  <h3>${name}</h3>
+  <button class="card">📚 Books</button>
+<button class="card">📝 Notes</button>
+<button class="card">🎞 Slides</button>
+<button class="card">📂 Previous Solved</button>
+<button class="card">💡 Suggestion</button>
+<button class="card">🎥 Classes</button>
+  <button onclick="openExam('${currentType}')">Back</button>
+  `;
+  show(html);
+}
+
+function openOther(){
+  let html=`
+  <h3>Other</h3>
+  <a href="#">Routines</a>
+  <a href="#">Lab Reports</a>
+  <a href="#">Assignments</a>
+  <a href="#">Cover Pages</a>
+  <button onclick="openSem(${currentSem})">Back</button>
+  `;
+  show(html);
+}
+
+// ========= FREE =========
+function showFree(){
+  let html=`
+  <h3>Free Courses</h3>
+  <div class="card">Hard Skills</div>
+  <div class="card">Soft Skills</div>
+  <div class="card">IELTS</div>
+  <button onclick="home()">Back</button>
+  `;
+  show(html);
+}
+
+// ========= PAID =========
+function showPaid(){
+
+  if(!paidUnlocked){
+    let pass = prompt("Enter Password");
+    if(pass !== "rakib123"){
+      alert("Wrong Password");
+      return;
+    }
+    paidUnlocked = true;
+  }
+
+  let html=`
+  <h3>Paid Courses</h3>
+  <div class="card" onclick="hardSkills()">Hard Skills</div>
+  <div class="card" onclick="softSkills()">Soft Skills</div>
+  <div class="card">Abroad</div>
+  <button onclick="home()">Back</button>
+  `;
+  show(html);
+}
+
+// ========= HARD =========
+function hardSkills(){
+  let list=["Web Dev","App Dev","Data Science","AI/ML","Cyber Security"];
+  let html="<h3>Hard Skills</h3>";
+  list.forEach(s=>{
+    html+=`<div class="card" onclick="openSource('${s}')">${s}</div>`;
+  });
+  html+=`<button onclick="showPaid()">Back</button>`;
+  show(html);
+}
+
+// ========= SOFT =========
+function softSkills(){
+  let list=["Communication","Interview","CV","Leadership"];
+  let html="<h3>Soft Skills</h3>";
+  list.forEach(s=>{
+    html+=`<div class="card" onclick="openSource('${s}')">${s}</div>`;
+  });
+  html+=`<button onclick="showPaid()">Back</button>`;
+  show(html);
+}
+
+// ========= SOURCE (Accounts / Telegram) =========
+function openSource(name){
+  let html=`
+  <h3>${name}</h3>
+  <div class="card" onclick="platform('${name}','Accounts')">Accounts</div>
+  <div class="card" onclick="platform('${name}','Telegram')">Telegram Courses</div>
+  <button onclick="showPaid()">Back</button>
+  `;
+  show(html);
+}
+
+// ========= PLATFORM =========
+function platform(name,type){
+  let html=`
+  <h3>${name} (${type})</h3>
+  <div class="card">Ostad</div>
+  <div class="card">Interactive Cares</div>
+  <div class="card">10 Minute School</div>
+  <button onclick="showPaid()">Back</button>
+  `;
+  show(html);
+}
+function openPrevious(){
+  let html = `<h3>📂 Semester ${currentSem} - Previous Questions</h3>`;
+
+  semesters[currentSem].forEach(course => {
+
+    // subject code বের করা (first part)
+    let subject = course.split(" ")[0].toLowerCase();
+
+    let key = `sem${currentSem}_prev_${subject}`;
+
+    html += `
+    <div class="file-card">
+      <h4>${course}</h4>
+      <button class="download-btn"
+      onclick="window.open('https://t.me/Rakibspersonalresourcesbot?start=${key}','_blank')">
+      📥 Download
+      </button>
+    </div>
+    `;
+  });
+
+  html += `<button onclick="openSem(${currentSem})">⬅ Back</button>`;
+  show(html);
+}</script>
 
 </body>
 </html>
