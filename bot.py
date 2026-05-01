@@ -34,7 +34,11 @@ def delete_file_db(key):
 FILES = load_files()
 
 # ===== API SERVER =====
+from flask_cors import CORS
+
 api = Flask(__name__)
+CORS(api)
+
 
 @api.route("/")
 def home():
