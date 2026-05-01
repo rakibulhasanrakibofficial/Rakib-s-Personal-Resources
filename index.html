@@ -279,6 +279,7 @@ function openPreviousType(){
 }
 
 function openPrevious(type){
+
   let html = `<h3>📂 Semester ${currentSem} - ${type.toUpperCase()} Previous</h3>`;
 
   semesters[currentSem].forEach(course => {
@@ -290,18 +291,17 @@ function openPrevious(type){
     html += `
     <div class="file-card">
       <h4>${course}</h4>
-      <a href="${data[k]}" target="_blank">
-        <button class="download-btn">
-           📥 Download
-        </button>
-      </a>
+      <button class="download-btn"
+      onclick="download('${key}')">
+        📥 Download
+      </button>
     </div>
     `;
   });
 
   html += `<button onclick="openPreviousType()">⬅ Back</button>`;
   show(html);
-}  
+}
 
 // ========= FREE =========
 function showFree(){
@@ -437,7 +437,9 @@ async function download(key){
       <div class="file-card">
         <h4>${k}</h4>
         <button class="download-btn"
-        onclick="openBot('${k}')">
+        <a href="${data[k]}" target="_blank">
+             <button class="download-btn">📥 Download</button>
+         </a>
         📥 Open in Telegram
         </button>
       </div>
