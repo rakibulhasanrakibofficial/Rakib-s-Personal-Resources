@@ -388,13 +388,24 @@ function openCourse(name){
   <h3>${name}</h3>
 
   <div class="card"
-  onclick="download('sem${currentSem}/${currentType}/${subject}')">
+  onclick="download('sem${currentSem}/${currentType}/question/${subject}')">
   📄 Question
   </div>
 
-  <div class="card">📚 Books</div>
-  <div class="card">📝 Notes</div>
-  <div class="card">🎞 Slides</div>
+  <div class="card"
+  onclick="download('sem${currentSem}/${currentType}/prev/${subject}')">
+  📂 Previous
+  </div>
+
+  <div class="card"
+  onclick="download('sem${currentSem}/${currentType}/slides/${subject}')">
+  🎞 Slides
+  </div>
+
+  <div class="card"
+  onclick="download('sem${currentSem}/${currentType}/notes/${subject}')">
+  📝 Notes
+  </div>
 
   <button onclick="openExam('${currentType}')">Back</button>
   `;
