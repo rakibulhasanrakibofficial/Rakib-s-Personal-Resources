@@ -432,20 +432,17 @@ async function download(key){
 
     let html = `<h3>📂 Files</h3>`;
 
-    matched.forEach(k=>{
-      html += `
-      <div class="file-card">
-        <h4>${k}</h4>
-        <button class="download-btn"
-        <a href="${data[k]}" target="_blank">
-             <button class="download-btn">📥 Download</button>
-         </a>
-        📥 Open in Telegram
-        </button>
-      </div>
-      `;
-    });
-
+   matched.forEach(k=>{
+  html += `
+  <div class="file-card">
+    <h4>${k}</h4>
+    <button class="download-btn"
+    onclick="window.open('${data[k]}', '_blank')">
+      📥 Download
+    </button>
+  </div>
+  `;
+});
     html += `<button onclick="history.back()">⬅ Back</button>`;
 
     document.getElementById("screen").innerHTML = html;
