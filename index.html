@@ -447,10 +447,10 @@ async function download(key){
   }
 }
 function openBot(key){
-  console.log("KEY:", key);
+  key = key.trim().toLowerCase();   // 👈 ADD THIS
+  console.log("SENDING KEY:", key); // 👈 DEBUG
   window.open(`https://t.me/Rakibspersonalresourcesbot?start=${key}`, '_blank');
 }
-  
 </script>
 
 </body>
