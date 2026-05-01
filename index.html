@@ -236,6 +236,7 @@ function openSem(n){
 
   <div class="card" onclick="openExam('mid')">Mid</div>
   <div class="card" onclick="openExam('final')">Final</div>
+  <div class="card" onclick="openPreviousType()">Previous Question</div>
   <div class="card" onclick="openOther()">Other</div>
 
   <button onclick="showAcademic()">Back</button>
@@ -252,19 +253,7 @@ function openExam(type){
   show(html);
 }
 
-function openCourse(name){
-  let html=`
-  <h3>${name}</h3>
-  <button class="card">📚 Books</button>
-<button class="card">📝 Notes</button>
-<button class="card">🎞 Slides</button>
-<button class="card">📂 Previous Solved</button>
-<button class="card">💡 Suggestion</button>
-<button class="card">🎥 Classes</button>
-  <button onclick="openExam('${currentType}')">Back</button>
-  `;
-  show(html);
-}
+
 
 function openOther(){
   let html=`
@@ -277,6 +266,41 @@ function openOther(){
   `;
   show(html);
 }
+function openPreviousType(){
+  let html=`
+  <h3>Previous Questions</h3>
+
+  <div class="card" onclick="openPrevious('mid')">Mid Previous</div>
+  <div class="card" onclick="openPrevious('final')">Final Previous</div>
+
+  <button onclick="openSem(${currentSem})">Back</button>
+  `;
+  show(html);
+}
+
+function openPrevious(type){
+  let html = `<h3>📂 Semester ${currentSem} - ${type.toUpperCase()} Previous</h3>`;
+
+  semesters[currentSem].forEach(course => {
+
+    let subject = course.split(" ")[0].toLowerCase();
+
+    let key = `sem${currentSem}/${type}/prev/${subject}`;
+
+    html += `
+    <div class="file-card">
+      <h4>${course}</h4>
+      <button class="download-btn"
+      onclick="window.open('https://t.me/Rakibspersonalresourcesbot?start=${key}','_blank')">
+      📥 Download
+      </button>
+    </div>
+    `;
+  });
+
+  html += `<button onclick="openPreviousType()">⬅ Back</button>`;
+  show(html);
+}  
 
 // ========= FREE =========
 function showFree(){
@@ -369,7 +393,7 @@ function openCourse(name){
   </div>
 
   <div class="card"
-  onclick="download('sem${currentSem}_${currentType}_prev_${subject}')">
+ onclick="download('sem${currentSem}/${currentType}/prev/${subject}')">
   📂 Previous Question
   </div>
 
@@ -385,6 +409,7 @@ function openCourse(name){
 function download(key){
   window.open(`https://t.me/Rakibspersonalresourcesbot?start=${key}`,'_blank');
 }
+  
 </script>
 
 </body>
