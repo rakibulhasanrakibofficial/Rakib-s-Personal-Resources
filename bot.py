@@ -73,49 +73,108 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 # ===== UPLOAD =====
 async def upload(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    try:
-        sem = context.args[0]
-        type_ = context.args[1].lower()
-        cat = context.args[2].lower()
-        subject = context.args[3].lower()
+    user_id = update.effective_user.id
+    args = context.args
 
-        UPLOAD_CONTEXT[update.effective_user.id] = {
-            "sem": sem,
-            "type": type_,
-            "cat": cat,
-            "subject": subject
-        }
+    UPLOAD_CONTEXT[user_id] = {}
+
+    if len(args) >= 1:
+        UPLOAD_CONTEXT[user_id]["sem"] = args[0]
+
+    if len(args) >= 2:
+        UPLOAD_CONTEXT[user_id]["type"] = args[1].lower()
+
+    if len(args) >= 3:
+        UPLOAD_CONTEXT[user_id]["cat"] = args[2].lower()
+
+    data = UPLOAD_CONTEXT[user_id]
+
+    if "sem" not in data:
+        await update.message.reply_text("Enter Semester (1-8):")
+        return
+
+    if "type" not in data:
+        await update.message.reply_text("Enter Type (mid/final):")
+        return
+
+    if "cat" not in data:
+        await update.message.reply_text("Enter Category (slides/prev/notes):")
+        return
+
+    if "subject" not in data:
+        await update.message.reply_text("Enter Subject (cse-2321):")
+        return
+
+async def handle_text(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    user_id = update.effective_user.id
+    text = update.message.text.lower()
+
+    if user_id not in UPLOAD_CONTEXT:
+        return
+
+    data = UPLOAD_CONTEXT[user_id]
+
+    if "sem" not in data:
+        data["sem"] = text
+        await update.message.reply_text("Enter Type (mid/final):")
+        return
+
+    if "type" not in data:
+        data["type"] = text
+        await update.message.reply_text("Enter Category (slides/prev/notes):")
+        return
+
+    if "cat" not in data:
+        data["cat"] = text
+        await update.message.reply_text("Enter Subject (cse-2321):")
+        return
+
+    if "subject" not in data:
+        data["subject"] = text
 
         await update.message.reply_text(
-            f"📤 Uploading to:\nsem{sem}/{type_}/{cat}/{subject}"
+            f"📤 Now send file\nPath: sem{data['sem']}/{data['type']}/{data['cat']}/{data['subject']}"
         )
-
-    except:
-        await update.message.reply_text(
-            "Use: /upload 3 mid slides cse-2321"
-        )
+        return
 # ===== HANDLE FILE =====
 async def handle_file(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_id = update.effective_user.id
 
+    # ❌ যদি আগে /upload না দেওয়া হয়
     if user_id not in UPLOAD_CONTEXT:
         await update.message.reply_text("❌ Use /upload first")
         return
 
+    data = UPLOAD_CONTEXT[user_id]
+
+    # ❌ যদি সব step complete না হয়
+    if not all(k in data for k in ["sem", "type", "cat", "subject"]):
+        await update.message.reply_text("❌ Complete all steps first")
+        return
+
+    # 📄 file info
     file = update.message.document
     file_id = file.file_id
 
-    sem = UPLOAD_CONTEXT[user_id]["sem"]
-    type_ = UPLOAD_CONTEXT[user_id]["type"]
-    cat = UPLOAD_CONTEXT[user_id]["cat"]
-    subject = UPLOAD_CONTEXT[user_id]["subject"]
+    # 📂 path build
+    sem = data["sem"]
+    type_ = data["type"]
+    cat = data["cat"]
+    subject = data["subject"]
 
     key = f"sem{sem}/{type_}/{cat}/{subject}"
 
+    # 💾 save
     FILES[key] = file_id
     save_file(key, file_id)
 
-    await update.message.reply_text(f"✅ Saved!\nKEY: {key}")
+    # ✅ success message
+    await update.message.reply_text(
+        f"✅ Saved!\n📂 Path: {key}"
+    )
+
+    # 🔄 reset context (important)
+    del UPLOAD_CONTEXT[user_id]
 # ===== DELETE =====
 async def delete_file(update: Update, context: ContextTypes.DEFAULT_TYPE):
     try:
@@ -158,5 +217,6 @@ app.add_handler(CommandHandler("upload", upload))
 app.add_handler(MessageHandler(filters.Document.ALL, handle_file))
 app.add_handler(CommandHandler("delete", delete_file))
 app.add_handler(CommandHandler("all", send_all))
+app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_text))
 
 app.run_polling()
