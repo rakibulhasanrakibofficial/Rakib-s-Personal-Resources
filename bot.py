@@ -121,37 +121,44 @@ async def upload(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text("Enter Subject (cse-2321):")
         return
 
-async def handle_text(update: Update, context: ContextTypes.DEFAULT_TYPE):
+async def handle_file(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_id = update.effective_user.id
-    text = update.message.text.lower()
 
+    # ❌ যদি আগে /upload না দেওয়া হয়
     if user_id not in UPLOAD_CONTEXT:
+        await update.message.reply_text("❌ Use /upload first")
         return
 
     data = UPLOAD_CONTEXT[user_id]
 
-    if "sem" not in data:
-        data["sem"] = text
-        await update.message.reply_text("Enter Type (mid/final):")
+    # ❌ যদি সব step complete না হয়
+    if not all(k in data for k in ["sem", "type", "cat", "subject"]):
+        await update.message.reply_text("❌ Complete all steps first")
         return
 
-    if "type" not in data:
-        data["type"] = text
-        await update.message.reply_text("Enter Category (slides/prev/notes):")
-        return
+    # 📄 file info
+    file = update.message.document
+    file_id = file.file_id
 
-    if "cat" not in data:
-        data["cat"] = text
-        await update.message.reply_text("Enter Subject (cse-2321):")
-        return
+    # 📂 path build
+    sem = data["sem"]
+    type_ = data["type"].strip().lower()
+    cat = data["cat"].strip().lower()
+    subject = data["subject"].strip().lower()
 
-    if "subject" not in data:
-        data["subject"] = text
+    key = f"sem{sem}/{type_}/{cat}/{subject}"
 
-        await update.message.reply_text(
-            f"📤 Now send file\nPath: sem{data['sem']}/{data['type']}/{data['cat']}/{data['subject']}"
-        )
-        return
+    # 💾 save
+    FILES[key] = file_id
+    save_file(key, file_id)
+
+    # ✅ success message
+    await update.message.reply_text(
+        f"✅ Saved!\n📂 Path: {key}"
+    )
+
+    # 🔄 reset context (important)
+    del UPLOAD_CONTEXT[user_id]
 # ===== HANDLE FILE =====
 async def handle_file(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_id = update.effective_user.id
