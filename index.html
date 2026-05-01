@@ -413,12 +413,15 @@ function openCourse(name){
   show(html);
 }
 async function download(key){
+
+  key = key.trim().toLowerCase();   // 🔥 MUST ADD
+
   try{
     let res = await fetch("https://rakib-s-personal-resources.onrender.com/files");
     let data = await res.json();
 
     let matched = Object.keys(data).filter(k => 
-      k.toLowerCase().startsWith(key.toLowerCase())
+      k.trim().toLowerCase().startsWith(key)
     );
 
     if(matched.length === 0){
