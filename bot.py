@@ -121,35 +121,7 @@ async def upload(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text("Enter Subject (cse-2321):")
         return
 
-async def handle_file(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    user_id = update.effective_user.id
 
-    if user_id not in UPLOAD_CONTEXT:
-        await update.message.reply_text("❌ Use /upload first")
-        return
-
-    data = UPLOAD_CONTEXT[user_id]
-
-    if not all(k in data for k in ["sem", "type", "cat", "subject"]):
-        await update.message.reply_text("❌ Complete all steps first")
-        return
-
-    file = update.message.document
-    file_id = file.file_id
-
-    sem = data["sem"]
-    type_ = data["type"].strip().lower()
-    cat = data["cat"].strip().lower()
-    subject = data["subject"].strip().lower()
-
-    key = f"sem{sem}/{type_}/{cat}/{subject}"
-
-    FILES[key] = file_id
-    save_file(key, file_id)
-
-    await update.message.reply_text(f"✅ Saved!\n📂 Path: {key}")
-
-    del UPLOAD_CONTEXT[user_id]
 # ===== HANDLE FILE =====
 async def handle_file(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_id = update.effective_user.id
@@ -174,7 +146,7 @@ async def handle_file(update: Update, context: ContextTypes.DEFAULT_TYPE):
     sem = data["sem"]
     type_ = data["type"].strip().lower()
     cat = data["cat"].strip().lower()
-   subject = data["subject"].strip().lower()
+    subject = data["subject"].strip().lower()
 
     key = f"sem{sem}/{type_}/{cat}/{subject}"
 
@@ -228,10 +200,9 @@ app = ApplicationBuilder().token(TOKEN).build()
 
 app.add_handler(CommandHandler("start", start))
 app.add_handler(CommandHandler("upload", upload))
-MessageHandler(filters.Document, handle_file)
+app.add_handler(MessageHandler(filters.Document, handle_file))
 app.add_handler(CommandHandler("delete", delete_file))
 app.add_handler(CommandHandler("all", send_all))
-app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_text))
 
 if __name__ == "__main__":
     start_services()
