@@ -75,35 +75,25 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def upload(update: Update, context: ContextTypes.DEFAULT_TYPE):
     try:
         sem = context.args[0]
-        arg1 = context.args[1].lower()
-        arg2 = context.args[2].lower()
-
-        valid_types = ["mid", "final"]
-        valid_cats = ["prev", "slides", "notes", "books", "question"]
-
-        # detect type & category
-        if arg1 in valid_types:
-            type_ = arg1
-            cat = arg2
-        else:
-            cat = arg1
-            type_ = arg2
-
-        if type_ not in valid_types or cat not in valid_cats:
-            await update.message.reply_text("❌ Wrong format")
-            return
+        type_ = context.args[1].lower()
+        cat = context.args[2].lower()
+        subject = context.args[3].lower()
 
         UPLOAD_CONTEXT[update.effective_user.id] = {
             "sem": sem,
             "type": type_,
-            "cat": cat
+            "cat": cat,
+            "subject": subject
         }
 
-        await update.message.reply_text(f"📤 Uploading to:\nsem{sem}/{type_}/{cat}")
+        await update.message.reply_text(
+            f"📤 Uploading to:\nsem{sem}/{type_}/{cat}/{subject}"
+        )
 
     except:
-        await update.message.reply_text("Use: /upload 5 mid slides OR /upload 5 slides mid")
-
+        await update.message.reply_text(
+            "Use: /upload 3 mid slides cse-2321"
+        )
 # ===== HANDLE FILE =====
 async def handle_file(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_id = update.effective_user.id
@@ -114,18 +104,11 @@ async def handle_file(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     file = update.message.document
     file_id = file.file_id
-  file_name = file.file_name.lower()
-
-# safe subject extract
-if "-" in file_name:
-    parts = file_name.split("-")
-    subject = parts[0] + "-" + parts[1]
-else:
-    subject = file_name.replace(".pdf", "").replace(" ", "")
 
     sem = UPLOAD_CONTEXT[user_id]["sem"]
     type_ = UPLOAD_CONTEXT[user_id]["type"]
     cat = UPLOAD_CONTEXT[user_id]["cat"]
+    subject = UPLOAD_CONTEXT[user_id]["subject"]
 
     key = f"sem{sem}/{type_}/{cat}/{subject}"
 
@@ -133,7 +116,6 @@ else:
     save_file(key, file_id)
 
     await update.message.reply_text(f"✅ Saved!\nKEY: {key}")
-
 # ===== DELETE =====
 async def delete_file(update: Update, context: ContextTypes.DEFAULT_TYPE):
     try:
