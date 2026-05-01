@@ -454,16 +454,13 @@ async function download(key){
   }
 }
 function openBot(key){
-  console.log("KEY FROM MINI APP:", key);
-
   key = key.trim().toLowerCase();
 
-  console.log("FINAL KEY:", key);
+  let url = "https://t.me/Rakibspersonalresourcesbot?start=" + encodeURIComponent(key);
 
-  window.open(
-    `https://t.me/Rakibspersonalresourcesbot?start=${encodeURIComponent(key)}`,
-    '_blank'
-  );
+  console.log("OPENING:", url); // debug
+
+  window.location.href = url;  // 🔥 IMPORTANT CHANGE
 }
 </script>
 
