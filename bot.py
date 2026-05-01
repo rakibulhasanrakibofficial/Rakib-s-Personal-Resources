@@ -53,27 +53,29 @@ def run_api():
     api.run(host="0.0.0.0", port=port)
 
 def start_services():
-    Thread(target=run_api).start()
+    t = Thread(target=run_api)
+    t.daemon = True
+    t.start()
 
 # ===== TEMP STORAGE =====
 UPLOAD_CONTEXT = {}
 
 # ===== START =====
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-   if context.args:
-    key = context.args[0]
+    if context.args:
+        key = context.args[0]
 
-    found = False
+        found = False
 
-    for k, file_id in FILES.items():
-        if k.startswith(key):
-            await update.message.reply_document(file_id)
-            found = True
+        for k, file_id in FILES.items():
+            if k.startswith(key):
+                await update.message.reply_document(file_id)
+                found = True
 
-    if not found:
-        await update.message.reply_text("❌ No files found")
+        if not found:
+            await update.message.reply_text("❌ No files found")
 
-    return
+        return
 
     keyboard = [[InlineKeyboardButton(
         "📚 Open Resources",
@@ -225,7 +227,7 @@ app = ApplicationBuilder().token(TOKEN).build()
 
 app.add_handler(CommandHandler("start", start))
 app.add_handler(CommandHandler("upload", upload))
-app.add_handler(MessageHandler(filters.Document.ALL, handle_file))
+MessageHandler(filters.Document, handle_file)
 app.add_handler(CommandHandler("delete", delete_file))
 app.add_handler(CommandHandler("all", send_all))
 app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_text))
