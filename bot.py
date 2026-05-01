@@ -31,8 +31,6 @@ def save_file(key, file_id):
 def delete_file_db(key):
     collection.delete_one({"key": key})
 
-FILES = load_files()
-
 # ===== API SERVER =====
 from flask_cors import CORS
 
@@ -157,7 +155,6 @@ async def handle_file(update: Update, context: ContextTypes.DEFAULT_TYPE):
     key = f"sem{sem}/{type_}/{cat}/{subject}"
 
     # 💾 save
-    FILES[key] = file_id
     save_file(key, file_id)
 
     # ✅ success message
@@ -172,8 +169,6 @@ async def delete_file(update: Update, context: ContextTypes.DEFAULT_TYPE):
     try:
         key = context.args[0]
 
-        if key in FILES:
-            del FILES[key]
             delete_file_db(key)
             await update.message.reply_text(f"🗑 Deleted: {key}")
         else:
