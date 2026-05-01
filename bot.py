@@ -62,6 +62,10 @@ UPLOAD_CONTEXT = {}
 
 # ===== START =====
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
+
+    # 🔥 DEBUG LINE (এইটাই add করবা)
+    print("START COMMAND:", context.args)
+
     if context.args:
         key = context.args[0]
 
@@ -86,7 +90,6 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     )]]
 
     await update.message.reply_text("📥 Click below", reply_markup=InlineKeyboardMarkup(keyboard))
-
 # ===== UPLOAD =====
 async def upload(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_id = update.effective_user.id
