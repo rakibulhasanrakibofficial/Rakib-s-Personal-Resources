@@ -174,9 +174,9 @@ async def handle_file(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     # 📂 path build
     sem = data["sem"]
-    type_ = data["type"]
-    cat = data["cat"]
-    subject = data["subject"]
+    type_ = data["type"].strip().lower()
+    cat = data["cat"].strip().lower()
+   subject = data["subject"].strip().lower()
 
     key = f"sem{sem}/{type_}/{cat}/{subject}"
 
