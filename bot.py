@@ -183,7 +183,10 @@ async def send_all(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
         found = False
 
-        for key, file_id in FILES.items():
+        for item in collection.find():
+            key = item["key"]
+            file_id = item["file_id"]
+
             if key.strip().lower().startswith(f"sem{sem}/{cat}"):
                 await update.message.reply_document(file_id)
                 found = True
@@ -193,7 +196,6 @@ async def send_all(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     except:
         await update.message.reply_text("Use: /all 3 prev")
-
 # ===== RUN =====
 app = ApplicationBuilder().token(TOKEN).build()
 
