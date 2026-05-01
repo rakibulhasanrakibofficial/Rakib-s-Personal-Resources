@@ -291,7 +291,7 @@ function openPrevious(type){
     <div class="file-card">
       <h4>${course}</h4>
       <button class="download-btn"
-      onclick="window.open('https://t.me/Rakibspersonalresourcesbot?start=${key}','_blank')">
+      onclick="download('${key}')">
       📥 Download
       </button>
     </div>
@@ -417,7 +417,9 @@ async function download(key){
     let res = await fetch("https://rakib-s-personal-resources.onrender.com/files");
     let data = await res.json();
 
-    let matched = Object.keys(data).filter(k => k.startsWith(key));
+    let matched = Object.keys(data).filter(k => 
+      k.toLowerCase().startsWith(key.toLowerCase())
+    );
 
     if(matched.length === 0){
       alert("❌ No files found");
