@@ -114,10 +114,14 @@ async def handle_file(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     file = update.message.document
     file_id = file.file_id
-    file_name = file.file_name.lower()
+  file_name = file.file_name.lower()
 
+# safe subject extract
+if "-" in file_name:
     parts = file_name.split("-")
     subject = parts[0] + "-" + parts[1]
+else:
+    subject = file_name.replace(".pdf", "").replace(" ", "")
 
     sem = UPLOAD_CONTEXT[user_id]["sem"]
     type_ = UPLOAD_CONTEXT[user_id]["type"]
