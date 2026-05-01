@@ -44,10 +44,9 @@ def home():
 
 @api.route("/files")
 def get_files():
-    data = {}
-    for item in collection.find():
-        data[item["key"]] = item["file_id"]
-    return jsonify(data)
+    return jsonify({
+        "sem3/final/prev/chem-2301": "https://drive.google.com/uc?export=download&id=1ze6nMlXcKqK-X7WcwlGeYInOB17Lx6Z9"
+    })
     
 def run_api():
     port = int(os.environ.get("PORT", 10000))
