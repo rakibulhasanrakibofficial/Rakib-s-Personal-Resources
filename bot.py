@@ -45,7 +45,7 @@ def home():
 @api.route("/files")
 def get_files():
     return jsonify({
-        "sem3/final/prev/chem-2301": "https://drive.google.com/uc?export=download&id=1ze6nMlXcKqK-X7WcwlGeYInOB17Lx6Z9"
+        "sem3/final/prev/chem-2301": "https://drive.google.com/file/d/1ze6nMlXcKqK-X7WcwlGeYInOB17Lx6Z9/preview"
     })
     
 def run_api():
