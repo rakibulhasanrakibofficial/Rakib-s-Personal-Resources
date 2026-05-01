@@ -169,10 +169,8 @@ async def delete_file(update: Update, context: ContextTypes.DEFAULT_TYPE):
     try:
         key = context.args[0]
 
-            delete_file_db(key)
-            await update.message.reply_text(f"🗑 Deleted: {key}")
-        else:
-            await update.message.reply_text("❌ Key not found")
+        delete_file_db(key)
+        await update.message.reply_text(f"🗑 Deleted: {key}")
 
     except:
         await update.message.reply_text("Use: /delete key")
