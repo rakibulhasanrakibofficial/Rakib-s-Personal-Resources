@@ -447,9 +447,14 @@ async function download(key){
   }
 }
 function openBot(key){
-  key = key.trim().toLowerCase();   // 👈 ADD THIS
-  console.log("SENDING KEY:", key); // 👈 DEBUG
-  window.open(`https://t.me/Rakibspersonalresourcesbot?start=${key}`, '_blank');
+  key = key.trim().toLowerCase();
+
+  console.log("FINAL KEY:", key); // debug
+
+  window.open(
+    `https://t.me/Rakibspersonalresourcesbot?start=${encodeURIComponent(key)}`,
+    '_blank'
+  );
 }
 </script>
 
