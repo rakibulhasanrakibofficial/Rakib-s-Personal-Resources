@@ -46,8 +46,11 @@ def home():
 
 @api.route("/files")
 def get_files():
-    return jsonify(FILES)
-
+    data = {}
+    for item in collection.find():
+        data[item["key"]] = item["file_id"]
+    return jsonify(data)
+    
 def run_api():
     port = int(os.environ.get("PORT", 10000))
     api.run(host="0.0.0.0", port=port)
