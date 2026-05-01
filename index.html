@@ -412,8 +412,22 @@ function openCourse(name){
 
   show(html);
 }
-function download(key){
-  window.open(`https://t.me/Rakibspersonalresourcesbot?start=${key}`,'_blank');
+async function download(key){
+  try{
+    let res = await fetch("https://rakib-s-personal-resources.onrender.com/files");
+    let data = await res.json();
+
+    let found = Object.keys(data).some(k => k.startsWith(key));
+
+    if(found){
+      window.open(`https://t.me/Rakibspersonalresourcesbot?start=${key}`, '_blank');
+    }else{
+      alert("❌ File not available");
+    }
+
+  }catch(e){
+    alert("⚠️ Server error");
+  }
 }
   
 </script>
