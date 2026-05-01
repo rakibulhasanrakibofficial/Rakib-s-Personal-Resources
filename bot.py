@@ -45,7 +45,12 @@ def home():
 @api.route("/files")
 def get_files():
     return jsonify({
-        "sem3/final/prev/chem-2301": "https://drive.google.com/file/d/1ze6nMlXcKqK-X7WcwlGeYInOB17Lx6Z9/preview"
+        "sem3/final/prev/chem-2301": "https://drive.google.com/file/d/1ze6nMlXcKqK-X7WcwlGeYInOB17Lx6Z9/preview",
+        "sem3/final/prev/cse-2321": "https://drive.google.com/file/d/1wfP62W6a-WSjsP49LcDIvbccGNbjjmLM/preview",
+        "sem3/final/prev/cse-2323": "https://drive.google.com/file/d/1zbOPnDY2SWIfBcvHRN5AJSTGS0YEMO9l/preview",
+        "sem3/final/prev/ured-2302": "https://drive.google.com/file/d/1NyJEdoE-Z5Zjg2YN4LoDXJ5F50Tet19K/preview",
+        "sem3/final/prev/math-2307": "https://drive.google.com/file/d/1rPKZ4XmyYLIO1CeeIPeeSWaSeIXTK1wO/preview",
+        "sem3/final/prev/stat-2311": "https://drive.google.com/file/d/1qzbYA_Nf4tkOwPb9W5ajfo-2ZzRbhfsV/preview"
     })
     
 def run_api():
