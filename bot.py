@@ -108,7 +108,7 @@ async def handle_file(update: Update, context: ContextTypes.DEFAULT_TYPE):
     type_ = UPLOAD_CONTEXT[user_id]["type"]
     cat = UPLOAD_CONTEXT[user_id]["cat"]
 
-    key = f"sem{sem}_{type_}_{cat}_{subject}"
+    key = f"sem{sem}/{type_}/{cat}/{subject}"
 
     FILES[key] = file_id
     save_file(key, file_id)
@@ -139,7 +139,7 @@ async def send_all(update: Update, context: ContextTypes.DEFAULT_TYPE):
         found = False
 
         for key, file_id in FILES.items():
-            if key.startswith(f"sem{sem}_{cat}"):
+           if key.startswith(f"sem{sem}/{cat}"):
                 await update.message.reply_document(file_id)
                 found = True
 
