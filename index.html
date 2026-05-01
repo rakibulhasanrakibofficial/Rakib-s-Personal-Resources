@@ -414,14 +414,14 @@ function openCourse(name){
 }
 async function download(key){
 
-  key = key.trim().toLowerCase();   // 🔥 MUST ADD
+  key = key.trim().toLowerCase();
 
   try{
     let res = await fetch("https://rakib-s-personal-resources.onrender.com/files");
     let data = await res.json();
 
     let matched = Object.keys(data).filter(k => 
-      k.trim().toLowerCase().startsWith(key)
+      k.toLowerCase().includes(key)
     );
 
     if(matched.length === 0){
