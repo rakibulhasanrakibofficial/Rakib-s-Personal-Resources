@@ -55,14 +55,20 @@ UPLOAD_CONTEXT = {}
 
 # ===== START =====
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    if context.args:
-        key = context.args[0]
+   if context.args:
+    key = context.args[0]
 
-        if key in FILES:
-            await update.message.reply_document(FILES[key])
-        else:
-            await update.message.reply_text("❌ File not found")
-        return
+    found = False
+
+    for k, file_id in FILES.items():
+        if k.startswith(key):
+            await update.message.reply_document(file_id)
+            found = True
+
+    if not found:
+        await update.message.reply_text("❌ No files found")
+
+    return
 
     keyboard = [[InlineKeyboardButton(
         "📚 Open Resources",
