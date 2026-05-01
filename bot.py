@@ -71,7 +71,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
             k = item["key"]
             file_id = item["file_id"]
 
-            if k.startswith(key):
+            if k.strip().lower().startswith(key.strip().lower()):
                 await update.message.reply_document(file_id)
                 found = True
 
@@ -179,13 +179,13 @@ async def delete_file(update: Update, context: ContextTypes.DEFAULT_TYPE):
 # ===== SEND ALL =====
 async def send_all(update: Update, context: ContextTypes.DEFAULT_TYPE):
     try:
-        sem = context.args[0]
-        cat = context.args[1]
+        sem = context.args[0].strip().lower()
+        cat = context.args[1].strip().lower()
 
         found = False
 
         for key, file_id in FILES.items():
-           if key.startswith(f"sem{sem}/{cat}"):
+            if key.strip().lower().startswith(f"sem{sem}/{cat}"):
                 await update.message.reply_document(file_id)
                 found = True
 
