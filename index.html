@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Rakib Resource Hub</title>
+<title>Rakib Resources Hub</title>
 
 <style>
 body{font-family:Arial;background:#0f172a;color:white;text-align:center}
@@ -414,19 +414,15 @@ function openCourse(name){
 }
 async function download(key){
 
-  // 🔥 KEY CLEAN (VERY IMPORTANT)
   key = key.trim().toLowerCase();
-  console.log("DOWNLOAD KEY:", key);
+  console.log("KEY:", key);
 
   try{
     let res = await fetch("https://rakib-s-personal-resources.onrender.com/files");
     let data = await res.json();
 
-    console.log("ALL KEYS:", Object.keys(data));
-
-    // 🔥 MATCH FIX (MAIN FIX)
     let matched = Object.keys(data).filter(k => 
-      k.trim().toLowerCase().includes(key)
+      k.trim().toLowerCase() === key
     );
 
     console.log("MATCHED:", matched);
@@ -450,12 +446,10 @@ async function download(key){
       `;
     });
 
-    html += `<button onclick="history.back()">⬅ Back</button>`;
-
     document.getElementById("screen").innerHTML = html;
 
   }catch(e){
-    console.log("ERROR:", e);
+    console.log(e);
     alert("⚠️ Server error");
   }
 }
