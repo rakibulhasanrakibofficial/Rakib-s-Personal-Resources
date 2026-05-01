@@ -415,7 +415,6 @@ function openCourse(name){
 async function download(key){
 
   key = key.trim().toLowerCase();
-  console.log("KEY:", key);
 
   try{
     let res = await fetch("https://rakib-s-personal-resources.onrender.com/files");
@@ -424,8 +423,6 @@ async function download(key){
     let matched = Object.keys(data).filter(k => 
       k.trim().toLowerCase() === key
     );
-
-    console.log("MATCHED:", matched);
 
     if(matched.length === 0){
       alert("❌ No files found");
@@ -440,16 +437,17 @@ async function download(key){
         <h4>${k}</h4>
         <button class="download-btn"
         onclick="openBot('${k}')">
-        📥 Download
+        📥 Open in Telegram
         </button>
       </div>
       `;
     });
 
+    html += `<button onclick="history.back()">⬅ Back</button>`;
+
     document.getElementById("screen").innerHTML = html;
 
   }catch(e){
-    console.log(e);
     alert("⚠️ Server error");
   }
 }
@@ -458,7 +456,7 @@ function openBot(key){
 
   let url = "https://t.me/Rakibspersonalresourcesbot?start=" + encodeURIComponent(key);
 
-  window.location.href = url;   // 🔥 THIS IS IMPORTANT
+  window.open(url, "_blank");   // 🔥 best for UX
 }
 </script>
 
