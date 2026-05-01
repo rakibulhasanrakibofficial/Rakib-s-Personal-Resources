@@ -124,23 +124,19 @@ async def upload(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def handle_file(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_id = update.effective_user.id
 
-    # ❌ যদি আগে /upload না দেওয়া হয়
     if user_id not in UPLOAD_CONTEXT:
         await update.message.reply_text("❌ Use /upload first")
         return
 
     data = UPLOAD_CONTEXT[user_id]
 
-    # ❌ যদি সব step complete না হয়
     if not all(k in data for k in ["sem", "type", "cat", "subject"]):
         await update.message.reply_text("❌ Complete all steps first")
         return
 
-    # 📄 file info
     file = update.message.document
     file_id = file.file_id
 
-    # 📂 path build
     sem = data["sem"]
     type_ = data["type"].strip().lower()
     cat = data["cat"].strip().lower()
@@ -148,16 +144,11 @@ async def handle_file(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     key = f"sem{sem}/{type_}/{cat}/{subject}"
 
-    # 💾 save
     FILES[key] = file_id
     save_file(key, file_id)
 
-    # ✅ success message
-    await update.message.reply_text(
-        f"✅ Saved!\n📂 Path: {key}"
-    )
+    await update.message.reply_text(f"✅ Saved!\n📂 Path: {key}")
 
-    # 🔄 reset context (important)
     del UPLOAD_CONTEXT[user_id]
 # ===== HANDLE FILE =====
 async def handle_file(update: Update, context: ContextTypes.DEFAULT_TYPE):
