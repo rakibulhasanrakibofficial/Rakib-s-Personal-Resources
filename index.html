@@ -414,15 +414,22 @@ function openCourse(name){
 }
 async function download(key){
 
+  // 🔥 KEY CLEAN (VERY IMPORTANT)
   key = key.trim().toLowerCase();
+  console.log("DOWNLOAD KEY:", key);
 
   try{
     let res = await fetch("https://rakib-s-personal-resources.onrender.com/files");
     let data = await res.json();
 
+    console.log("ALL KEYS:", Object.keys(data));
+
+    // 🔥 MATCH FIX (MAIN FIX)
     let matched = Object.keys(data).filter(k => 
-      k.toLowerCase().includes(key)
+      k.trim().toLowerCase().includes(key)
     );
+
+    console.log("MATCHED:", matched);
 
     if(matched.length === 0){
       alert("❌ No files found");
@@ -448,6 +455,7 @@ async function download(key){
     document.getElementById("screen").innerHTML = html;
 
   }catch(e){
+    console.log("ERROR:", e);
     alert("⚠️ Server error");
   }
 }
