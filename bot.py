@@ -52,7 +52,8 @@ def run_api():
     port = int(os.environ.get("PORT", 10000))
     api.run(host="0.0.0.0", port=port)
 
-Thread(target=run_api).start()
+def start_services():
+    Thread(target=run_api).start()
 
 # ===== TEMP STORAGE =====
 UPLOAD_CONTEXT = {}
@@ -229,4 +230,6 @@ app.add_handler(CommandHandler("delete", delete_file))
 app.add_handler(CommandHandler("all", send_all))
 app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_text))
 
-app.run_polling()
+if __name__ == "__main__":
+    start_services()
+    app.run_polling()
