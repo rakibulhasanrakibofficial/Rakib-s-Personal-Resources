@@ -66,6 +66,7 @@ button{margin:10px;padding:6px 12px}
 <div id="screen"></div>
 
 <script>
+let currentPrevType = "";  
 let paidUnlocked = false;
 
 // ========= COURSE DATA =========
@@ -279,9 +280,9 @@ function openPreviousType(){
 }
 
 function openPrevious(type){
+  currentPrevType = type;   // 🔥 ADD THIS
 
   let html = `<h3>📂 Semester ${currentSem} - ${type.toUpperCase()} Previous</h3>`;
-
   semesters[currentSem].forEach(course => {
 
     let subject = course.split(" ")[0].toLowerCase();
@@ -450,7 +451,7 @@ async function download(key){
   </div>
   `;
 });
-    html += `<button onclick="history.back()">⬅ Back</button>`;
+   html += `<button onclick="openPrevious(currentPrevType)">⬅ Back</button>`;
 
     document.getElementById("screen").innerHTML = html;
 
