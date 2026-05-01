@@ -67,7 +67,10 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
         found = False
 
-        for k, file_id in FILES.items():
+        for item in collection.find():
+            k = item["key"]
+            file_id = item["file_id"]
+
             if k.startswith(key):
                 await update.message.reply_document(file_id)
                 found = True
